@@ -127,9 +127,31 @@ Example:
   "defaultTheme": "dark",
   "themeToggle": true,
   "scrollProgress": true,
-  "landing": "index.md"
+  "landing": "index.md",
+  "basePath": "/docs.ts",
 }
 ```
+
+### Base Path Support
+
+The documentation engine now supports hosting under a subdirectory.
+
+If your site is deployed under a path such as:
+```
+https://example.com/docs/
+```
+you can configure it explicitly using:
+```json
+{
+  "basePath": "/docs/"
+}
+```
+If `basePath` is not provided, the engine assumes:
+```
+/
+```
+This allows the documentation site to correctly resolve routes and assets when hosted either at the domain root or inside a subfolder.
+
 
 ### Navigation
 

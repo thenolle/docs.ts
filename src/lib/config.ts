@@ -3,12 +3,18 @@ import type { DocsConfig } from './types.ts'
 const CONFIG_PATH = './docs/config.json'
 
 let _cache: DocsConfig | null = null
+let _basePath = '/'
+
+export function getBasePath(): string {
+  return _basePath
+}
 
 export async function loadConfig(): Promise<DocsConfig> {
   if (_cache) return _cache
   const response = await fetch(CONFIG_PATH)
   if (!response.ok) throw new Error(`Cannot load config (${response.status}): ${CONFIG_PATH}`)
   _cache = await response.json() as DocsConfig
+  _basePath = (_cache.basePath || '/').replace(/\/$/, '') || '/'
   return _cache
 }
 

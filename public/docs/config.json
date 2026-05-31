@@ -6,6 +6,7 @@
   "themeToggle": true,
   "scrollProgress": true,
   "landing": "index.md",
+  "basePath": "/docs.ts",
   "logo": {
     "alt": "docs.ts"
   },

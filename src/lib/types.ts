@@ -38,6 +38,7 @@ export interface DocsConfig {
   }
   nav: NavEntry[]
   landing?: string
+  basePath?: string
   theme?: DocTheme
   customRules?: CustomMarkdownRule[]
   scrollProgress?: boolean
