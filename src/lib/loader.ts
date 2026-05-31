@@ -6,31 +6,26 @@ const DOCS_BASE = './docs/'
 
 export interface LoadResult {
   html: string
-  empty: boolean
+  status: 'ok' | 'not_found' | 'error'
 }
 
-export async function loadPage(
-  path: string,
-  customRules: CustomMarkdownRule[] = []
-): Promise<LoadResult> {
+export async function loadPage(path: string, customRules: CustomMarkdownRule[] = []): Promise<LoadResult> {
   const url = /^https?:\/\//.test(path) ? path : DOCS_BASE + path
-
-  let source: string
+  let response: Response
   try {
-    const res = await fetch(url)
-    if (!res.ok) return { html: '', empty: true }
-    source = await res.text()
+    response = await fetch(url)
   } catch {
-    return { html: '', empty: true }
+    return { html: '', status: 'error' }
   }
-
-  if (!source.trim()) return { html: '', empty: true }
-
+  if (response.status === 404) return { html: '', status: 'not_found' }
+  if (!response.ok) return { html: '', status: 'error' }
+  const source = await response.text()
+  if (!source.trim()) return { html: '', status: 'not_found' }
   try {
     const imported = await fetchImports(source, url)
     const html = parse(source, imported, customRules)
-    return { html: `<div class="doc-section">${html}</div>`, empty: false }
+    return { html: `<div class="doc-section">${html}</div>`, status: 'ok' }
   } catch {
-    return { html: '', empty: true }
+    return { html: '', status: 'error' }
   }
 }

@@ -5,28 +5,32 @@ import { loadPage } from './lib/loader.ts'
 
 async function boot(): Promise<void> {
   const config = await loadConfig()
-
   document.documentElement.setAttribute('data-theme', config.defaultTheme ?? 'dark')
   applyTheme(config)
   buildShell(config)
-
   const landing = config.landing ?? 'index.md'
-
   initRouter(landing, async (path: string) => {
     setActiveNav(path)
+    let result
     try {
-      const result = await loadPage(path, config.customRules ?? [])
-      if (result.empty) renderEmptyPage(config)
-      else renderPage(result.html)
-    } catch (error) {
-      console.error('Error loading page:', error)
-      renderPage(`
-        <div class="callout callout-danger">
-          <strong>Failed to render page</strong>
-          <p><code>${String(error)}</code></p>
-        </div>
-      `)
+      result = await loadPage(path, config.customRules ?? [])
+    } catch {
+      result = { html: '', status: 'error' as const }
     }
+    if (result.status === 'ok') {
+      renderPage(result.html)
+      return
+    }
+    if (result.status === 'not_found') {
+      const error = await loadPage(config.landing ?? 'index.md')
+      if (error.status === 'ok') {
+        renderPage(`<div class="callout callout-danger"><strong>404 - Page not found</strong><p>This page does not exist.</p></div>`)
+        return
+      }
+      renderEmptyPage(config)
+      return
+    }
+    renderPage(`<div class="callout callout-danger"><strong>Failed to load page</strong></div>`)
   })
 }
 
