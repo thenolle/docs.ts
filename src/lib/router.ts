@@ -30,27 +30,23 @@ export function hrefToPath(href: string): string {
 
 async function resolveRoute(raw: string): Promise<string> {
   const clean = normalize(raw)
-  const has404 = await fileExists(_errorPage)
-  const use404 = has404 ? _errorPage : _landing
   const isDirectory = clean.endsWith('/')
-  const isExplicitMd = clean.endsWith('.md')
-  if (!clean) return _landing
   if (isDirectory) {
-    const indexPath = `${clean}index.md`
-    const exists = await fileExists(indexPath)
-    if (exists) return indexPath
-    return use404
+    const has404 = await fileExists(_errorPage)
+    return has404 ? _errorPage : _landing
   }
+  const isExplicitMd = clean.endsWith('.md')
   if (isExplicitMd) {
-    const exists = await fileExists(clean)
-    if (exists) return clean
-    return use404
+    if (await fileExists(clean)) return clean
+    const has404 = await fileExists(_errorPage)
+    return has404 ? _errorPage : _landing
   }
-  const direct = `${clean}.md`
-  if (await fileExists(direct)) return direct
-  const folderIndex = `${clean}/index.md`
-  if (await fileExists(folderIndex)) return folderIndex
-  return use404
+  const mdPath = `${clean}.md`
+  if (await fileExists(mdPath)) {
+    return mdPath
+  }
+  const has404 = await fileExists(_errorPage)
+  return has404 ? _errorPage : _landing
 }
 
 export function navigate(path: string): void {
