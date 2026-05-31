@@ -18,23 +18,30 @@ jobs:
   build:
     name: Build & Verify
     runs-on: ubuntu-latest
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v5
+
       - name: Setup Bun
         uses: oven-sh/setup-bun@v2
         with:
           bun-version: latest
+
       - name: Install dependencies
         run: bun install --frozen-lockfile
+
       - name: TypeScript check
         run: bunx tsc --noEmit
+
       - name: Build project
         run: bun run build
+
       - name: Verify build output
         run: |
           test -d dist
-          test -F dist/index.html
+          test -f dist/index.html
+
       - name: Upload build artifact
         uses: actions/upload-artifact@v4
         with:
