@@ -4,9 +4,14 @@ let _handler: RouteHandler | null = null
 let _landing = 'index.md'
 let _errorPage = 'error.md'
 
+const BASE_PATH = (() => {
+  const pathname = window.location.pathname
+  return pathname.endsWith('/') ? pathname.slice(0, -1) : pathname
+})()
+
 async function fileExists(path: string): Promise<boolean> {
   try {
-    const response = await fetch(`./docs/${path}`, { method: 'HEAD' })
+    const response = await fetch(`${BASE_PATH}/docs/${path}`, { method: 'HEAD' })
     return response.ok
   } catch {
     return false
@@ -42,22 +47,21 @@ async function resolveRoute(raw: string): Promise<string> {
     return has404 ? _errorPage : _landing
   }
   const mdPath = `${clean}.md`
-  if (await fileExists(mdPath)) {
-    return mdPath
-  }
+  if (await fileExists(mdPath)) return mdPath
   const has404 = await fileExists(_errorPage)
   return has404 ? _errorPage : _landing
 }
 
 export function navigate(path: string): void {
-  window.location.hash = `#/${path}`
+  const clean = path.startsWith('/') ? path.slice(1) : path
+  window.location.href = `${BASE_PATH}/#/${clean}`
 }
 
 async function dispatch(): Promise<void> {
   if (!_handler) return
   const hash = cleanHash()
   if (!hash) {
-    window.location.replace(`/#/${_landing}`)
+    window.location.replace(`${BASE_PATH}/#/${_landing}`)
     _handler(_landing)
     return
   }
