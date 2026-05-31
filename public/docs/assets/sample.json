@@ -1,0 +1,25 @@
+{
+  "name": "docs-ts",
+  "version": "1.0.0",
+  "engine": {
+    "parser": "custom",
+    "highlighter": "built-in",
+    "dependencies": 0
+  },
+  "supportedLanguages": [
+    "typescript",
+    "javascript",
+    "json",
+    "css",
+    "html",
+    "bash"
+  ],
+  "features": {
+    "chips": true,
+    "spoilers": true,
+    "callouts": true,
+    "fileImports": true,
+    "customRules": true,
+    "darkMode": true
+  }
+}

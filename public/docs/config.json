@@ -1,0 +1,56 @@
+{
+  "title": "docs.ts",
+  "description": "A markdown-based documentation engine built on Vite + TypeScript",
+  "version": "v1.0.0",
+  "defaultTheme": "dark",
+  "themeToggle": true,
+  "scrollProgress": true,
+  "landing": "index.md",
+  "logo": {
+    "alt": "docs.ts"
+  },
+  "theme": {
+    "accent": "#ff88ff",
+    "accentHover": "#ff99ff"
+  },
+  "customRules": [
+    {
+      "id": "highlight-term",
+      "pattern": "==([^=]+)==",
+      "flags": "g",
+      "replacement": "<mark>$1</mark>"
+    },
+    {
+      "id": "version-tag",
+      "pattern": "::v\\[([^\\]]+)\\]",
+      "flags": "g",
+      "replacement": "<span class=\"chip chip-sm\" style=\"color:var(--tok-str)\">$1</span>"
+    },
+    {
+      "id": "since-tag",
+      "pattern": "::since\\[([^\\]]+)\\]",
+      "flags": "g",
+      "replacement": "<span class=\"chip chip-sm\" style=\"color:var(--text-faint)\">since $1</span>"
+    }
+  ],
+  "nav": [
+    { "label": "Introduction", "href": "index.md" },
+    {
+      "group": "Guide",
+      "items": [
+        { "label": "Getting Started", "href": "guide/getting-started.md" },
+        { "label": "Configuration",   "href": "guide/configuration.md" },
+        { "label": "Writing Pages",   "href": "guide/writing-pages.md" }
+      ]
+    },
+    {
+      "group": "Markdown Reference",
+      "items": [
+        { "label": "Basic Syntax",    "href": "reference/basic.md" },
+        { "label": "Custom Elements", "href": "reference/custom.md" },
+        { "label": "File Imports",    "href": "reference/imports.md" },
+        { "label": "Code Blocks",     "href": "reference/code.md" }
+      ]
+    }
+  ]
+}
